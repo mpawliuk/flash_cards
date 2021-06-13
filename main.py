@@ -28,6 +28,7 @@ def instructions():
     print("INSTRUCTION OF THE GAME :)")
 
 def play():
+    pass
     #TODO:
     # 1. call the game
     # 2. interaction with user

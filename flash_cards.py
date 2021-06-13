@@ -14,6 +14,7 @@ def clean_input(question, a=0, b=100):
             return n
 
 
+# This method is now in card.py class 
 def display_card(card):
     """Print the card nicely."""
     a, b, op = card[:3]
