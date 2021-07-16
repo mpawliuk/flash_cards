@@ -14,6 +14,9 @@ def clean_input(question, a=0, b=100):
             n = min(max(a, n), b)
             return n
 
+# TODO : CREATE SCORE QUEUE HERE.
+# Once a card is failed have one immediately and then another one later on like 10 cards after.
+
 
 def unsolved_remaining(cards: List[Card]):
     """Return True if there are any unsolved questions."""
@@ -24,7 +27,7 @@ def unsolved_remaining(cards: List[Card]):
     return False
 
 
-def generate_cards(add_percent: int, low: int, high:int, num_cards: int ) -> List(Card):
+def generate_cards(add_percent: int, low: int, high:int, num_cards: int ) -> List[Card]:
     """Generates the flashcards to be studied"""
     card_list = List()
 
@@ -44,13 +47,14 @@ def play(cards:List(Card)):
         for card in cards:
             if not card.solved:
                 card.display_card()
+                card.confidence_score = get_q_confidence()
                 r = clean_input(" (No=0, Yes=1, Exit=2.) ", 0, 2)
                 if r == 1:
                     # Got it correct!
                     card.solved = True
                 elif r == 2:
                     # Exit
-                    end_stats(cards, time.time()-start)
+                    end_stats(cards, time.time()- start)
                     return None
                 # Increase attempt counter
                 card.attempts += 1
@@ -58,7 +62,17 @@ def play(cards:List(Card)):
     # Display stats
     end_stats(cards, time.time()-start)
 
+def get_q_confidence() -> int:
+    """Get's the user's confidence for the card"""
+    response = input("How confident do you feel about being able to answer this question (from 1-10)? ")
+    if response.isnumeric() & 0 < response <= 10:
+        return int(response)
+    else:
+        print("Incorrect score value, please enter a number from 1 to 10.")
+        # we call the function until it returns the appropriate value
+        get_q_confidence()
 
+# TODO: look into this? since the cards are now objects
 def end_stats(cards, total_time):
     """Print relevant stats."""
     total_attempts = sum(card[3] for card in cards)

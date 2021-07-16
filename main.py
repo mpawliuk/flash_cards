@@ -1,6 +1,6 @@
 # This is where the main system of the flash card game will go
 import sys
-from card_logistics import generate_cards, handle_cards
+from card_logistics import generate_cards, handle_cards, play
 
 
 def main_menu():
