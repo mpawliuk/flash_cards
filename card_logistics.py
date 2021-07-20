@@ -14,16 +14,12 @@ def clean_input(question, a=0, b=100):
             n = min(max(a, n), b)
             return n
 
-# TODO : CREATE SCORE QUEUE HERE.
-# Once a card is failed have one immediately and then another one later on like 10 cards after.
-
-
-def unsolved_remaining(cards: List[Card]):
+def unsolved_remaining(cards: List[Card])  -> bool:
     """Return True if there are any unsolved questions."""
     for card in cards:
         if not card.solved:
             return True
-    # We went through all the cards and all have been solve
+    # We went through all the cards and all have been solved
     return False
 
 
@@ -41,23 +37,33 @@ def generate_cards(add_percent: int, low: int, high:int, num_cards: int ) -> Lis
     return card_list
 
 
-def play(cards:List(Card)):
-    """Play the game and go through the flashcards"""
+def play(cards:List(Card)) -> None:
+    """Play the game and go through the flashcards.
+
+    When a card is failed, it is pushed back by shift places.
+    shift: int
+    """
     while unsolved_remaining(cards):
         for card in cards:
             if not card.solved:
                 card.display_card()
-                card.confidence_score = get_q_confidence()
                 r = clean_input(" (No=0, Yes=1, Exit=2.) ", 0, 2)
-                if r == 1:
+                card.attempts += 1
+                card.confidence_score = get_q_confidence()
+                shift = card.calculate_shift()
+                if r == 0:
+                    # Failed. Push it back by the shift
+                    i = cards.index(card)
+                    cards.remove(card)
+                    n = len(cards)
+                    cards.insert((i+shift) % n, card)
+                elif r == 1:
                     # Got it correct!
                     card.solved = True
                 elif r == 2:
                     # Exit
-                    end_stats(cards, time.time()- start)
+                    end_stats(cards, time.time()-start)
                     return None
-                # Increase attempt counter
-                card.attempts += 1
 
     # Display stats
     end_stats(cards, time.time()-start)

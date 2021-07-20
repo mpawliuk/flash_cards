@@ -35,10 +35,10 @@ class Card:
         print(question)
         print("".join('*' for _ in question))
 
-    def calculate_oc(self):
-       """Calculates the overall score for the card so that it can be put on the queue."""
-       # TODO: Calculate the overall score of the card based on:
-       #    the # of attempts,
-       #    if it has been solved and
-       #    the student's overall confidence score
-       pass
+    def calculate_shift(self) -> int:
+       """Calculates the overall score for the card which determines its shift on the queue."""
+       shift = 0
+       # If the q has already been solved then it should be further along the queue
+       if self.solved:
+           shift += 5
+       return shift + self.attempts + self.confidence_score
