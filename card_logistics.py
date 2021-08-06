@@ -64,7 +64,7 @@ def play(cards:List(Card)) -> None:
                     card.solved = True
                 elif r == 2:
                     # Exit
-                    end_stats(cards, time.time()-start)
+                    end_stats(cards)
                     return None
 
     # Display stats
@@ -80,19 +80,32 @@ def get_q_confidence() -> int:
         # we call the function until it returns the appropriate value
         get_q_confidence()
 
-# TODO: look into this? since the cards are now objects
-def end_stats(cards, total_time):
+def end_stats(cards):
     """Print relevant stats."""
-    total_attempts = sum(card[3] for card in cards)
+    total_attempts = sum(card.attempts for card in cards)
     ave_attempts = total_attempts / len(cards)
-    max_attempts = max(card[3] for card in cards)
+    max_attempts = max(card.attempts for card in cards)
+    total_time = sum(card.time for card in cards)
+    ave_time = total_time / total_attempts
+    max_time = max(card.time for card in cards)
+    
+    # Find card with most attempts needed
     for card in cards:
-        if card[3] == max_attempts:
-            hard_card = card
+        if card.attempts == max_attempts:
+            most_attempted_card = card
+    # Find card with most time needed
+    for card in cards:
+        if card.time == max_time:
+            most_time_card = card
+    
+    # Display everything
     print("Congratulations! All cards have been solved!")
     print("Total time: {:.1f} seconds.".format(total_time))
+    print("Average time per question: {:.1f} seconds.".format(ave_time))
     print("Total attempts: {}".format(total_attempts))
     print("Average attempts per question: {:.1f}".format(ave_attempts))
-    print("Most challenging question:")
-    display_card(hard_card)
+    print("Most challenging questions:")
+    display_card(most_attempted_card)
     print("which needed {} attempts.".format(max_attempts))
+    display_card(most_time_card)
+    print("which needed {} seconds.".format(max_time))
