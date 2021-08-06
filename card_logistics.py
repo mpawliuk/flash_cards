@@ -47,9 +47,11 @@ def play(cards:List(Card)) -> None:
         for card in cards:
             if not card.solved:
                 card.display_card()
+                solve_time_start = time.time() # Begin timer
                 r = clean_input(" (No=0, Yes=1, Exit=2.) ", 0, 2)
                 card.attempts += 1
                 card.confidence_score = get_q_confidence()
+                card.time += time.time() - solve_time_start # Update timer
                 shift = card.calculate_shift()
                 if r == 0:
                     # Failed. Push it back by the shift
