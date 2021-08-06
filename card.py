@@ -8,6 +8,7 @@ class Card:
     attempts: number card attempts
     solved: True if the card has been solved. False otherwise.
     confidence_score: How confident the student feels with regards to that question.
+    time: Total time spent solving this card.
     """
     a: int
     op: any
@@ -16,6 +17,7 @@ class Card:
     attempts: int
     solved: bool
     confidence_score: int
+    time: float
 
     def __init__(self, a: int, op: any, b: int) -> None:
         """Initialize a new flashcard. It has not been attempted yet or solved yet."""
@@ -26,6 +28,7 @@ class Card:
         self.attempts = 0
         self.confidence_score = 0
         self.solved = False
+        self.time = 0
 
     def display_card(self):
         """Print the card nicely."""
